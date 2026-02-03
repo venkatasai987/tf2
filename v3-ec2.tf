@@ -8,7 +8,12 @@ region  = "ap-south-1"
   //security_groups = ["demo-sg"]     
   vpc_security_group_ids = [aws_security_group.demo-sg.id]
   subnet_id     = aws_subnet.d-subnet-1.id
- }
+  for each = toset(["J-M", "J-S", "AS"])
+
+  tags = {
+    Name = "${each.key}"
+  }
+  }
 resource "aws_security_group" "demo-sg" {
   name        = "demo-sg"
   description = "SSH Access"
