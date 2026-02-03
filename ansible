@@ -6,9 +6,54 @@ sudo apt install ansible
 sudo chmod 600 n.pem
 sudo chown $USER:$USER n.pem
 
+
+
 [servers]
 10.1.1.95 ansible_user=ubuntu
 10.1.1.120 ansible_user=ubuntu
 
+[jenkins-slave]
+10.1.1.95 ansible_user=ubuntu
+
+[jenkins-master]
+10.1.1.120 ansible_user=ubuntu
+
 [servers:vars]
 ansible_ssh_private_key_file=/opt/n.pem
+
+
+---
+- hosts: jenkins-master
+  become: true
+  tasks:
+  - name: add jenkins key
+    apt_key:
+      url:  https://pkg.jenkins.io/debian-stable/jenkins.io-2026.key
+      state: present
+
+  - name: add jenkins repo
+    apt_repository:
+      repo: "deb https://pkg.jenkins.io/debian-stable binary/"
+      state: present
+
+  - name: install java
+    apt:
+      name: openjdk-17-jre
+      state: present
+
+  - name: install jenkins
+    apt:
+      name: jenkins
+      state: present
+
+  - name: start jenkins service
+    service:
+      name: jenkins
+      state: started
+
+  - name: enable jenkins to start at boot time
+    service:
+      name: jenkins
+      enabled: yes
+
+
