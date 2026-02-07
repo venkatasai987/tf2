@@ -1,0 +1,1 @@
+1. Download Artifactory Plugin in Jenkins. Instal and configure J Pub Generate token Go to Jenkins dashboard. Configure system Select J Frog. Add our EC URL up to port number. Give username and password Are token
