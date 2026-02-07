@@ -1,0 +1,8 @@
+download docker give permissins to sock
+1. Create dockerfile Where our pomdot xml is there 
+
+FROM openjdk:8
+ADD jarstaging/com/valaxy/demo-workshop/2.1.2/demo-workshop-2.1.2.jar ttrend.jar 
+ENTRYPOINT [ "java", "-jar", "ttrend.jar" ]
+
+2. In repositories in JFog Create a docker repository.  Instal. DockerPipeline Plug in jenkins  And Add build and publish steps in Jenkins file with jrog crednetials so it it canoush to jfrog. In repositories in JF Create a docker repository.
