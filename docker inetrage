@@ -1,4 +1,5 @@
 * instal. DockerPipeline Plug in jenkins
+* Create credentials in Jenkins Username Github username. And create token Give ID And paste this id in Jenkins file
 download docker give permissins to sock
 1. Create dockerfile Where our pomdot xml is there 
 
