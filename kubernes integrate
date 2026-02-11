@@ -22,6 +22,19 @@ Configure awscli to connect with aws account
 Download Kubernetes credentials and cluster configuration (.kube/config file) from the cluster
 
  aws eks update-kubeconfig --region us-east-1 --name valaxy-eks-01
+
+3.create and apply yaml files for our app
+or 
+if want auto deploy using jenkins 
+4.create deploy.sh file and give executalble permissions and keep in in git hub and edit jenkinsfile
+vi deploy.sh
+#!/bin/sh
+kubectl apply -f namespace.yaml
+kubectl apply -f secret.yaml
+kubectl apply -f deployment.yaml
+kubectl apply -f service.yaml
+
+and edit jenkinsfile to run this script
 ------------------------------------------------------------------------------------------------
 ## Integrate build server with Kubernetes cluster 
 
