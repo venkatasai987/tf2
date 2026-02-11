@@ -1,0 +1,63 @@
+1. Instal helm,
+2. Helm Create  ttrend
+3.cd /ttrend/templates/     ----remove allfiles here and move our all files here like deploy.yaml, service.yaml ..etc 
+4. helm instal Ttrend.
+
+or 
+if want implement in jenkins
+2. Helm Create  ttrend
+3.cd /ttrend/templates/     ----remove allfiles here and move our all files here like deploy.yaml, service.yaml ..etc 
+3.helm package ttrend
+4.push this package to git hub
+5.modify jenkinsfile
+
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
+----------------------------------------------------------
+
+# Create a custom Helm chart
+
+1. To create a helm chart template 
+   ```sh 
+   helm create ttrend
+   ```
+
+    by default, it contains 
+    - values.yaml
+    - templates
+    - Charts.yaml
+    - charts
+
+2. Replace the template directory with the manifest files and package it
+   ```sh
+   helm package ttrend
+   ```
+3. Change the version number in the 
+   ```sh 
+   helm install ttrend ttrend-0.1.0.tgz         
+   ```
+
+4. Create a jenkins job for the deployment 
+   ```sh 
+   stage(" Deploy ") {
+          steps {
+            script {
+               echo '<--------------- Helm Deploy Started --------------->'
+               sh 'helm install ttrend ttrend-0.1.0.tgz'
+               echo '<--------------- Helm deploy Ends --------------->'
+            }
+          }
+        }
+   ```
+
+5. To list installed helm deployments
+   ```sh 
+   helm list -a
+   ```
+
+Other useful commands
+1. to change the default namespace to valaxy
+   ```sh
+   kubectl config set-context --current --namespace=valaxy
+   ```
