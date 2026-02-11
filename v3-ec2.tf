@@ -1,17 +1,20 @@
  provider "aws" {
-region  = "ap-south-1"
+region  = "us-east-1"
 }
  resource "aws_instance" "web" {
-  ami           = "ami-019715e0d74f695be"
-  instance_type = "t2.micro"
-  key_name      = "n"
+  for_each = {
+    "J-M" = "t2.medium"
+    "J-S" = "t2.large"
+    "AS"  = "t2.micro"
+  }
+  ami           = "ami-0b6c6ebed2801a5cb"
+  instance_type = each.value
+  key_name      = "sn"
   //security_groups = ["demo-sg"]     
   vpc_security_group_ids = [aws_security_group.demo-sg.id]
   subnet_id     = aws_subnet.d-subnet-1.id
-  for_each = toset(["J-M", "J-S", "AS"])
-
   tags = {
-    Name = "${each.key}"
+    Name = each.key
   }
   }
 resource "aws_security_group" "demo-sg" {
@@ -51,7 +54,7 @@ resource "aws_subnet" "d-subnet-1" {
   vpc_id            = aws_vpc.d-vpc.id
   cidr_block        = "10.1.1.0/24"
   map_public_ip_on_launch = true
-  availability_zone = "ap-south-1a"
+  availability_zone = "us-east-1a"
     tags = {
         Name = "d-subnet-1"
     }
@@ -61,7 +64,7 @@ resource "aws_subnet" "d-subnet-2" {
   vpc_id            = aws_vpc.d-vpc.id
   cidr_block        = "10.1.2.0/24"
   map_public_ip_on_launch = true   
-    availability_zone = "ap-south-1b"
+    availability_zone = "us-east-1b"
         tags = {
             Name = "d-subnet-2"
         }
@@ -90,3 +93,15 @@ resource "aws_route_table_association" "a-rt-subnet-2" {
   subnet_id      = aws_subnet.d-subnet-2.id
   route_table_id = aws_route_table.d-rt.id
 }
+
+  module "sgs" {
+    source = "../sg_eks"
+    vpc_id     =     aws_vpc.d-vpc.id
+ }
+
+  module "eks" {
+       source = "../eks"
+       vpc_id     =     aws_vpc.d-vpc.id
+       subnet_ids = [aws_subnet.d-subnet-1.id,aws_subnet.d-subnet-2.id]
+       sg_ids = module.sgs.security_group_public
+ }
